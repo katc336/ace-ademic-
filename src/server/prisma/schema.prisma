@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  username String  @unique
+  profile  String?
+  password String
+  classes  Class[]
+}
+
+model Class {
+  id         Int          @id @default(autoincrement())
+  name       String
+  teacher    User         @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId  Int
+  students   Student[]
+  lessons    Lesson[]
+  Assignment Assignment[]
+}
+
+model Student {
+  id              Int               @id @default(autoincrement())
+  name            String
+  parentCode      String?           @unique
+  studentCode     String            @unique
+  class           Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId         Int
+  attendances     Attendance[]
+  studentProgress StudentProgress[]
+  submissions     Submission[]
+  StudentAccount  StudentAccount[]
+}
+
+model Assignment {
+  id                Int                @id @default(autoincrement())
+  name              String
+  task              String
+  dueDate           String?
+  dueTime           String?
+  class             Class              @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId           Int
+  submissions       Submission[]
+  lesson            Lesson             @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId          Int
+  learningObjective LearningObjective? @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  objectiveId       Int?
+}
+
+model Submission {
+  id           Int        @id @default(autoincrement())
+  name         String
+  createdAt    DateTime   @default(now())
+  content      String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  assignmentId Int
+  student      Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId    Int
+}
+
+model CombinedObjective {
+  id                 Int                 @id @default(autoincrement())
+  objectiveName      String              @unique
+  learningObjectives LearningObjective[]
+  studentProgress    StudentProgress[]
+}
+
+model Lesson {
+  id                 Int                 @id @default(autoincrement())
+  createdAt          DateTime            @default(now())
+  lessonName         String
+  date               String              @default("")
+  class              Class               @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId            Int
+  learningObjectives LearningObjective[]
+  attendances        Attendance[]
+  Assignment         Assignment[]
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  present   Boolean  @default(true)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId  Int
+  createdAt DateTime @default(now())
+}
+
+model LearningObjective {
+  id                  Int               @id @default(autoincrement())
+  objectiveName       String
+  lesson              Lesson            @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId            Int
+  combinedObjective   CombinedObjective @relation(fields: [combinedObjectiveId], references: [id], onDelete: Cascade)
+  combinedObjectiveId Int
+  studentProgress     StudentProgress[]
+  Assignment          Assignment[]
+}
+
+model StudentProgress {
+  id                  Int               @id @default(autoincrement())
+  student             Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId           Int
+  learningObjective   LearningObjective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  objectiveId         Int
+  combinedObjective   CombinedObjective @relation(fields: [combinedObjectiveId], references: [id], onDelete: Cascade)
+  combinedObjectiveId Int
+  progressPrecent     Int
+  createdAt           DateTime          @default(now())
+}
+
+model StudentAccount {
+  id          Int     @id @default(autoincrement())
+  username    String  @unique
+  password    String
+  studentCode String  @unique
+  student     Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId   Int
+}
