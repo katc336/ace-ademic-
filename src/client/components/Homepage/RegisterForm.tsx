@@ -18,7 +18,7 @@ const RegisterForm: React.FC<SwitchForm> = ({ switchForm }) => {
     const [signup] = useRegisterMutation();
     const navigate = useNavigate();
 
-    // const { isMobile } = MobileTheme();
+    const { isMobile } = MobileTheme();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         try {
@@ -52,7 +52,6 @@ const RegisterForm: React.FC<SwitchForm> = ({ switchForm }) => {
         <div>
             <Box sx={{ my: 10 }}>
                 <Box sx={{
-                    backgroundImage: isMobile ? `url(${authScrollMobile})` : `url(${authScroll})`,
                     backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
@@ -63,7 +62,6 @@ const RegisterForm: React.FC<SwitchForm> = ({ switchForm }) => {
                         sx={{
                             color: "#1E0542",
                             textAlign: "center",
-                            fontFamily: "fantasy",
                             mb: 1
                         }}>
                         Sign Up

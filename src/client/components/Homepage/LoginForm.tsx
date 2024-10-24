@@ -6,7 +6,6 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../../../redux/api';
-// import MobileTheme from "../../SizeThemes/MobileTheme";
 import MobileTheme from '../StyleThemes/MobileTheme';
 
 
@@ -27,7 +26,7 @@ const LoginForm: React.FC<SwitchForm> = ({ switchForm }) => {
                 // Successful login
                 setLoginError(false);
                 console.log("Success!");
-                navigate("/story_teller");
+                // navigate("/story_teller");
             } else if ('error' in result) {
                 // Error occurred
                 setLoginError(true);
@@ -47,7 +46,6 @@ const LoginForm: React.FC<SwitchForm> = ({ switchForm }) => {
     return (
         <div>
             <Box sx={{
-                backgroundImage: isMobile ? `url(${authScrollMobile})` : `url(${authScroll})`,
                 backgroundSize: "contain",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
@@ -57,7 +55,6 @@ const LoginForm: React.FC<SwitchForm> = ({ switchForm }) => {
                 <Typography
                     variant="h4"
                     sx={{
-                        fontFamily: "fantasy",
                         textAlign: "center",
                         color: "#1E0542",
                         mb: 1
@@ -86,7 +83,7 @@ const LoginForm: React.FC<SwitchForm> = ({ switchForm }) => {
                                 <button
                                     className="auth-button"
                                     type="submit">
-                                    <Typography sx={{ color: "#1E0542", }}>
+                                    <Typography sx={{ color: "white", }}>
                                         Login
                                     </Typography>
                                 </button>

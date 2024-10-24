@@ -1,0 +1,3 @@
+type SwitchForm = {
+    switchForm: any
+}
